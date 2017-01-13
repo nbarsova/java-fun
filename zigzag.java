@@ -62,5 +62,22 @@ public class Matrix
   }
   }
   }
-
+/*
+private static void printZigzag (int[][] matrix) {
+        StringBuilder str = new StringBuilder();
+        int n = matrix.length;
+        int k;
+        for(int i = 0; i < n; i++) {
+            int[] row = matrix[i];
+            for(int j = 0; j < n; j++) {
+                k = ((i & 1) == 0) ? j : n - j - 1;
+                str.append(row[k]);
+            }
+             
+            str.append('\n');
+        }
+        System.out.println(str.toString());
+    }
+ */
+ 
 }
