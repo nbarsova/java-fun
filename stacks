@@ -1,0 +1,170 @@
+/* How would you design a stack which, in addition to push and pop, also has a
+function min which returns the minimum element? Push, pop and min should
+all operate in O(1) time.
+
+Imagine a (literal) stack of plates. If the stack gets too high, it might topple.
+Therefore, in real life, we would likely start a new stack when the previous stack
+exceeds some threshold. Implement a data structure SetOf Stacks that mimics
+this. SetOf Stacks should be composed of several stacks and should create a
+new stack once the previous one exceeds capacity. SetOf Stacks. push() and
+SetOf Stacks. pop() should behave identically to a single stack (that is, popO
+should return the same values as it would if there were just a single stack).
+ */
+
+import java.io.*;
+import java.util.ArrayList;
+
+class myCode
+{
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        StackWithMin stack = new StackWithMin();
+        stack.push(4);
+        stack.push(2);
+        stack.push(5);
+        stack.push(1);
+        System.out.println(stack.min());
+        System.out.println(stack.pop());
+        System.out.println(stack.min());
+        
+        SetOfStacks newSet = new SetOfStacks();
+        
+        for (int i=0; i<25; i++)
+        {
+            newSet.push(new Integer(i));
+        }
+        
+        do {
+            Integer value = newSet.pop();
+            if (value!=null) {
+            System.out.println(value);
+            } else break;
+        } while (true);
+    }
+    
+    private static class StackWithMin extends Stack<Integer> {
+        private Stack<Integer> mins = new Stack<>();
+        
+        public Integer min() {
+            Integer min = mins.peek();
+            return min == null ? Integer.MAX_VALUE : min;
+        }
+        
+         public Integer pop() {
+            Integer value = super.pop();
+            if(value == min())
+                mins.pop();
+            return value;
+        }
+    
+        public void push(Integer value) {
+            if(value <= min())
+                mins.push(value);
+            super.push(value);
+        }
+        
+    }
+    
+    private static class SetOfStacks {
+        private ArrayList <Stack> stacks = new ArrayList();
+        private Stack <Integer> currentStack = new Stack();
+        private int currentStackSize = 0;
+        private int capacity=10;
+        
+        public int getCapacity ()
+        {
+            return capacity;
+        }
+        
+        public void push(Integer value) {
+            if (currentStackSize==capacity)
+            {
+                System.out.println("Stack number " +stacks.size()+ " is full");
+                stacks.add(currentStack);
+                currentStack = new Stack <Integer>();
+                currentStackSize = 0;
+            }
+            
+            currentStack.push(value);
+            currentStackSize++;
+       }
+       
+        // we assume that null is a sign of the end of the stack, i.e. no null values in stack
+        public Integer pop ()
+        {
+
+            if (stacks.size() == 0)
+            {
+                return null;
+            } else {
+                Integer value = currentStack.pop();
+                if (value == null) {
+                    if (stacks.indexOf(currentStack)!=-1) {
+                        System.out.println("Removing stack number "+(stacks.size()-1));
+                        stacks.remove(stacks.indexOf(currentStack));
+                    }
+                    if (stacks.size()>0) {    
+                        currentStack = stacks.get(stacks.size()-1);
+                        value = currentStack.pop();
+                    } else 
+                    {
+                        value = null;
+                    }
+                }
+                return value;
+            }
+        }
+    }
+
+
+private static class Stack<T> {
+    private Node<T> top;
+    
+    public T pop() {
+        if(top == null)
+            return null;
+        T value = top.getValue();
+        top = top.getNext();
+        return value;
+    }
+    
+    public void push(T value) {
+        
+        // should have a check for null here?
+        top = new Node(value, top);
+    }
+    
+    public T peek() {
+        if (top == null) {
+            return null;
+        }
+        return top.getValue();
+    }
+}
+
+private static class Node<T> {
+    T value;
+    Node<T> next;
+    
+    Node (T value, Node<T> next) {
+        this.value = value;
+        this.next = next;
+    }
+    
+    public void setValue(T value) {
+        this.value = value;
+    }
+    
+    public T getValue() {
+        return value;
+    }
+    
+    public void setNext(Node<T> next) {
+        this.next = next;
+    }
+    
+    public Node<T> getNext() {
+        return next;
+    }
+}
+}
